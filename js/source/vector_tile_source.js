@@ -3,6 +3,7 @@
 var Evented = require('../util/evented');
 var util = require('../util/util');
 var loadTileJSON = require('./load_tilejson');
+var Pako = require('pako');
 var normalizeURL = require('../util/mapbox').normalizeTileURL;
 
 module.exports = VectorTileSource;
@@ -65,7 +66,56 @@ VectorTileSource.prototype = util.inherit(Evented, {
         };
 
         if (!tile.workerID) {
-            tile.workerID = this.dispatcher.send('load tile', params, done.bind(this));
+            //tile.workerID = this.dispatcher.send('load tile', params, done.bind(this));
+
+            var url = params.url.split('/'),
+                z = url[0],
+                x = url[1],
+                y = url[2];
+            y = (1 << z) - 1 - y;
+            //this.copyDatabaseFile(params.source + ".mbtiles").then(function() {
+                if (!this.db) {
+                    this.db = window.sqlitePlugin.openDatabase({
+                        name: params.source + '.mbtiles',
+                        location: 2,
+                        createFromLocation: 1,
+                        androidDatabaseImplementation: 2
+                    });
+                }
+
+                this.db.transaction(function(tx) {
+                    tx.executeSql("SELECT tile_data FROM tiles WHERE zoom_level = " + z + " AND tile_column = " + x + " AND tile_row =" + y, [], function (tx, res) {
+                        try {
+                            //if(res.rows.item(0)){
+                                var tileData = res.rows.item(0).tile_data,
+                                    tileDataDecoded = window.atob(tileData),
+                                    tileDataDecodedLength = tileDataDecoded.length,
+                                    tileDataTypedArray = new Uint8Array(tileDataDecodedLength);
+                                for (var i = 0; i < tileDataDecodedLength; ++i) {
+                                    tileDataTypedArray[i] = tileDataDecoded.charCodeAt(i);
+                                }
+                                var tileDataInflated = Pako.inflate(tileDataTypedArray);
+                                params.tileData = tileDataInflated;
+                                tile.workerID = this.dispatcher.send('load tile', params, done.bind(this));
+                            /*}else{
+                                console.log("No Results",res.rows);
+                            }*/
+
+                        } catch (error) {
+                            console.log("Error after select", error);
+                        }
+                    }.bind(this),function(error, y){
+                        console.log("Error on Getting tiles: ",error,y);
+                    });
+                }.bind(this), function(error) {
+                    console.log('transaction error: ' + error);
+                }, function() {
+                    console.log('transaction ok');
+                });
+            /*}.bind(this)).catch(function(err) {
+                console.log("File Write Error", err);
+            });*/
+
         } else if (tile.state === 'loading') {
             // schedule tile reloading after it has been loaded
             tile.reloadCallback = callback;

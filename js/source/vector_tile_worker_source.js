@@ -146,14 +146,16 @@ VectorTileWorkerSource.prototype = {
      * @param {LoadVectorDataCallback} callback
      */
     loadVectorData: function (params, callback) {
-        var xhr = ajax.getArrayBuffer(params.url, done.bind(this));
-        return function abort () { xhr.abort(); };
-        function done(err, arrayBuffer) {
-            if (err) { return callback(err); }
-            var vectorTile = new vt.VectorTile(new Protobuf(arrayBuffer));
-            vectorTile.rawData = arrayBuffer;
-            callback(err, vectorTile);
-        }
+        /*var xhr = ajax.getArrayBuffer(params.url, done.bind(this));
+        return function abort () { xhr.abort(); };*/
+        //function done(err, arrayBuffer) {
+        var tileData = params.tileData;
+            //if (err) { return callback(err); }
+        var vectorTile = new vt.VectorTile(new Protobuf(tileData));
+        vectorTile.rawData = tileData;
+        callback(null, vectorTile);
+        return function abort () {};
+       // }
     },
 
     redoPlacement: function(params, callback) {

@@ -1,5 +1,6 @@
 'use strict';
 
+const assert = require('assert');
 const Evented = require('../util/evented');
 const StyleLayer = require('./style_layer');
 const ImageSprite = require('./image_sprite');
@@ -21,6 +22,29 @@ const styleSpec = require('./style_spec');
 const MapboxGLFunction = require('mapbox-gl-function');
 const getWorkerPool = require('../global_worker_pool');
 const deref = require('mapbox-gl-style-spec/lib/deref');
+const diff = require('mapbox-gl-style-spec/lib/diff');
+
+const supportedDiffOperations = util.pick(diff.operations, [
+    'addLayer',
+    'removeLayer',
+    'setPaintProperty',
+    'setLayoutProperty',
+    'setFilter',
+    'addSource',
+    'removeSource',
+    'setLayerZoomRange',
+    'setLight',
+    'setTransition'
+    // 'setGlyphs',
+    // 'setSprite',
+]);
+
+const ignoredDiffOperations = util.pick(diff.operations, [
+    'setCenter',
+    'setZoom',
+    'setBearing',
+    'setPitch'
+]);
 
 /**
  * @private
@@ -252,7 +276,13 @@ class Style extends Evented {
             this._updateWorkerLayers(updatedIds, removedIds);
         }
         for (const id in this._updatedSources) {
-            this._reloadSource(id);
+            const action = this._updatedSources[id];
+            assert(action === 'reload' || action === 'clear');
+            if (action === 'reload') {
+                this._reloadSource(id);
+            } else if (action === 'clear') {
+                this._clearSource(id);
+            }
         }
 
         this._applyClasses(classes, options);
@@ -282,6 +312,50 @@ class Style extends Evented {
 
         this._updatedPaintProps = {};
         this._updatedAllPaintProps = false;
+    }
+
+    /**
+     * Update this style's state to match the given style JSON, performing only
+     * the necessary mutations.
+     *
+     * May throw an Error ('Unimplemented: METHOD') if the mapbox-gl-style-spec
+     * diff algorithm produces an operation that is not supported.
+     *
+     * @returns {boolean} true if any changes were made; false otherwise
+     * @private
+     */
+    setState(nextState) {
+        this._checkLoaded();
+
+        if (validateStyle.emitErrors(this, validateStyle(nextState))) return false;
+
+        nextState = util.extend({}, nextState);
+        nextState.layers = deref(nextState.layers);
+
+        const changes = diff(this.serialize(), nextState)
+            .filter(op => !(op.command in ignoredDiffOperations));
+
+        if (changes.length === 0) {
+            return false;
+        }
+
+        const unimplementedOps = changes.filter(op => !(op.command in supportedDiffOperations));
+        if (unimplementedOps.length > 0) {
+            throw new Error(`Unimplemented: ${unimplementedOps.map(op => op.command).join(', ')}.`);
+        }
+
+        changes.forEach((op) => {
+            if (op.command === 'setTransition') {
+                // `transition` is always read directly off of
+                // `this.stylesheet`, which we update below
+                return;
+            }
+            this[op.command].apply(this, op.args);
+        });
+
+        this.stylesheet = nextState;
+
+        return true;
     }
 
     addSource(id, source, options) {
@@ -362,7 +436,16 @@ class Style extends Evented {
 
         this._layers[id] = layer;
 
-        delete this._removedLayers[id];
+        if (this._removedLayers[id]) {
+            // If, in the current batch, we have already removed this layer
+            // and we are now re-adding it, then we need to clear (rather
+            // than just reload) the underyling source's tiles.
+            // Otherwise, tiles marked 'reloading' will have buffers that are
+            // set up for the _previous_ version of this layer, confusing
+            // https://github.com/mapbox/mapbox-gl-js/issues/3633
+            delete this._removedLayers[id];
+            this._updatedSources[layer.source] = 'clear';
+        }
         this._updateLayer(layer);
 
         if (layer.type === 'symbol') {
@@ -393,8 +476,8 @@ class Style extends Evented {
 
         if (layer.type === 'symbol') {
             this._updatedSymbolOrder = true;
-            if (layer.source) {
-                this._updatedSources[layer.source] = true;
+            if (layer.source && !this._updatedSources[layer.source]) {
+                this._updatedSources[layer.source] = 'reload';
             }
         }
     }
@@ -457,7 +540,7 @@ class Style extends Evented {
 
         const layer = this.getLayer(layerId);
 
-        if (filter !== null && this._validate(validateStyle.filter, `layers.${layer.id}.filter`, filter)) return;
+        if (filter !== null && filter !== undefined && this._validate(validateStyle.filter, `layers.${layer.id}.filter`, filter)) return;
 
         if (util.deepEqual(layer.filter, filter)) return;
         layer.filter = util.clone(filter);
@@ -523,6 +606,11 @@ class Style extends Evented {
         return this.getLayer(layer).getPaintProperty(name, klass);
     }
 
+    getTransition() {
+        return util.extend({ duration: 300, delay: 0 },
+            this.stylesheet && this.stylesheet.transition);
+    }
+
     updateClasses(layerId, paintName) {
         this._changed = true;
         if (!layerId) {
@@ -554,8 +642,8 @@ class Style extends Evented {
 
     _updateLayer(layer) {
         this._updatedLayers[layer.id] = true;
-        if (layer.source) {
-            this._updatedSources[layer.source] = true;
+        if (layer.source && !this._updatedSources[layer.source]) {
+            this._updatedSources[layer.source] = 'reload';
         }
         this._changed = true;
     }
@@ -671,6 +759,10 @@ class Style extends Evented {
         this.dispatcher.remove();
     }
 
+    _clearSource(id) {
+        this.sourceCaches[id].clearTiles();
+    }
+
     _reloadSource(id) {
         this.sourceCaches[id].reload();
     }
@@ -683,7 +775,7 @@ class Style extends Evented {
 
     _redoPlacement() {
         for (const id in this.sourceCaches) {
-            if (this.sourceCaches[id].redoPlacement) this.sourceCaches[id].redoPlacement();
+            this.sourceCaches[id].redoPlacement();
         }
     }
 

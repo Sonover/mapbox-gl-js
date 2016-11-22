@@ -212,9 +212,9 @@ class Map extends Camera {
     }
 
     /**
-     * Adds a [`Control`](#Control) to the map, calling `control.onAdd(this)`.
+     * Adds a [`IControl`](#IControl) to the map, calling `control.onAdd(this)`.
      *
-     * @param {Control} control The [`Control`](#Control) to add.
+     * @param {IControl} control The [`IControl`](#IControl) to add.
      * @param {string} [position='top-right'] position on the map to which the control will be added.
      * valid values are 'top-left', 'top-right', 'bottom-left', and 'bottom-right'
      * @returns {Map} `this`
@@ -240,7 +240,7 @@ class Map extends Camera {
     /**
      * Removes the control from the map.
      *
-     * @param {Control} control The [`Control`](#Control) to add.
+     * @param {IControl} control The [`IControl`](#IControl) to add.
      * @returns {Map} `this`
      */
     removeControl(control) {
@@ -645,18 +645,36 @@ class Map extends Camera {
     }
 
     /**
-     * Replaces the map's Mapbox style object with a new value.
+     * Updates the map's Mapbox style object with a new value.  If the given
+     * value is style JSON object, compares it against the the map's current
+     * state and perform only the changes necessary to make the map style match
+     * the desired state.
      *
      * @param {Object|string} style A JSON object conforming to the schema described in the
      *   [Mapbox Style Specification](https://mapbox.com/mapbox-gl-style-spec/), or a URL to such JSON.
+     * @param {Object} [options]
+     * @param {boolean} [options.diff=true] If false, force a 'full' update, removing the current style
+     *   and adding building the given one instead of attempting a diff-based update.
      * @returns {Map} `this`
      * @see [Change a map's style](https://www.mapbox.com/mapbox-gl-js/example/setstyle/)
      */
-    setStyle(style) {
+    setStyle(style, options) {
+        const shouldTryDiff = (!options || options.diff !== false) && this.style && style &&
+            !(style instanceof Style) && typeof style !== 'string';
+        if (shouldTryDiff) {
+            try {
+                if (this.style.setState(style)) {
+                    this._update(true);
+                }
+                return this;
+            } catch (e) {
+                util.warnOnce(`Unable to perform style diff: ${e.message || e.error || e}.  Rebuilding the style from scratch.`);
+            }
+        }
+
         if (this.style) {
             this.style.setEventedParent(null);
             this.style._remove();
-
             this.off('rotate', this.style._redoPlacement);
             this.off('pitch', this.style._redoPlacement);
         }

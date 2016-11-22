@@ -197,7 +197,7 @@ class Painter {
 
         this.glyphSource = style.glyphSource;
 
-        this.frameHistory.record(this.transform.zoom);
+        this.frameHistory.record(Date.now(), this.transform.zoom, style.getTransition().duration);
 
         this.prepareBuffers();
         this.clearColor();
@@ -362,7 +362,7 @@ class Painter {
         const program = gl.createProgram();
         const definition = shaders[name];
 
-        let definesSource = '#define MAPBOX_GL_JS;\n';
+        let definesSource = `#define MAPBOX_GL_JS\n#define DEVICE_PIXEL_RATIO ${browser.devicePixelRatio.toFixed(1)}\n`;
         if (this._showOverdrawInspector) {
             definesSource += '#define OVERDRAW_INSPECTOR;\n';
         }

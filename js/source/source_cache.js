@@ -60,6 +60,12 @@ class SourceCache extends Evented {
         }
     }
 
+    onRemove(map) {
+        if (this._source && this._source.onRemove) {
+            this._source.onRemove(map);
+        }
+    }
+
     /**
      * Return true if no tile data is pending, tiles will not change unless
      * an additional API call is received.
@@ -383,8 +389,8 @@ class SourceCache extends Evented {
 
         if (!tile) {
             tile = this._cache.get(wrapped.id);
-            if (tile && this._redoPlacement) {
-                this._redoPlacement(tile);
+            if (tile) {
+                tile.redoPlacement(this._source);
             }
         }
 

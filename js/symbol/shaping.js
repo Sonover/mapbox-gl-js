@@ -1,70 +1,85 @@
 'use strict';
 
+const scriptDetection = require('../util/script_detection');
+const verticalizePunctuation = require('../util/verticalize_punctuation');
+
+
+const WritingMode = {
+    horizontal: 1,
+    vertical: 2
+};
+
 module.exports = {
     shapeText: shapeText,
-    shapeIcon: shapeIcon
+    shapeIcon: shapeIcon,
+    WritingMode: WritingMode
 };
 
 
 // The position of a glyph relative to the text's anchor point.
-function PositionedGlyph(codePoint, x, y, glyph) {
+function PositionedGlyph(codePoint, x, y, glyph, angle) {
     this.codePoint = codePoint;
     this.x = x;
     this.y = y;
     this.glyph = glyph || null;
+    this.angle = angle;
 }
 
 // A collection of positioned glyphs and some metadata
-function Shaping(positionedGlyphs, text, top, bottom, left, right) {
+function Shaping(positionedGlyphs, text, top, bottom, left, right, writingMode) {
     this.positionedGlyphs = positionedGlyphs;
     this.text = text;
     this.top = top;
     this.bottom = bottom;
     this.left = left;
     this.right = right;
+    this.writingMode = writingMode;
 }
 
-var newLine = 0x0a;
+const newLine = 0x0a;
 
-function shapeText(text, glyphs, maxWidth, lineHeight, horizontalAlign, verticalAlign, justify, spacing, translate) {
-
-    var positionedGlyphs = [];
-    var shaping = new Shaping(positionedGlyphs, text, translate[1], translate[1], translate[0], translate[0]);
-
-    // the y offset *should* be part of the font metadata
-    var yOffset = -17;
-
-    var x = 0;
-    var y = yOffset;
+function shapeText(text, glyphs, maxWidth, lineHeight, horizontalAlign, verticalAlign, justify, spacing, translate, verticalHeight, writingMode) {
 
     text = text.trim();
+    if (writingMode === WritingMode.vertical) text = verticalizePunctuation(text);
 
-    for (var i = 0; i < text.length; i++) {
-        var codePoint = text.charCodeAt(i);
-        var glyph = glyphs[codePoint];
+    const positionedGlyphs = [];
+    const shaping = new Shaping(positionedGlyphs, text, translate[1], translate[1], translate[0], translate[0], writingMode);
+
+    // the y offset *should* be part of the font metadata
+    const yOffset = -17;
+
+    let x = 0;
+
+    for (let i = 0; i < text.length; i++) {
+        const codePoint = text.charCodeAt(i);
+        const glyph = glyphs[codePoint];
 
         if (!glyph && codePoint !== newLine) continue;
 
-        positionedGlyphs.push(new PositionedGlyph(codePoint, x, y, glyph));
+        if (!scriptDetection.charHasUprightVerticalOrientation(codePoint) || writingMode === WritingMode.horizontal) {
+            positionedGlyphs.push(new PositionedGlyph(codePoint, x, yOffset, glyph, 0));
+            if (glyph) x += glyph.advance + spacing;
 
-        if (glyph) {
-            x += glyph.advance + spacing;
+        } else {
+            positionedGlyphs.push(new PositionedGlyph(codePoint, x, 0, glyph, -Math.PI / 2));
+            if (glyph) x += verticalHeight + spacing;
         }
     }
 
     if (!positionedGlyphs.length) return false;
 
-    linewrap(shaping, glyphs, lineHeight, maxWidth, horizontalAlign, verticalAlign, justify, translate);
+    linewrap(shaping, glyphs, lineHeight, maxWidth, horizontalAlign, verticalAlign, justify, translate, scriptDetection.allowsIdeographicBreaking(text), writingMode);
 
     return shaping;
 }
 
-var invisible = {
+const invisible = {
     0x20:   true, // space
     0x200b: true  // zero-width space
 };
 
-var breakable = {
+const breakable = {
     0x20:   true, // space
     0x26:   true, // ampersand
     0x2b:   true, // plus sign
@@ -79,19 +94,25 @@ var breakable = {
 
 invisible[newLine] = breakable[newLine] = true;
 
-function linewrap(shaping, glyphs, lineHeight, maxWidth, horizontalAlign, verticalAlign, justify, translate) {
-    var lastSafeBreak = null;
-    var lengthBeforeCurrentLine = 0;
-    var lineStartIndex = 0;
-    var line = 0;
+function linewrap(shaping, glyphs, lineHeight, maxWidth, horizontalAlign, verticalAlign, justify, translate, useBalancedIdeographicBreaking, writingMode) {
+    let lastSafeBreak = null;
+    let lengthBeforeCurrentLine = 0;
+    let lineStartIndex = 0;
+    let line = 0;
 
-    var maxLineLength = 0;
+    let maxLineLength = 0;
 
-    var positionedGlyphs = shaping.positionedGlyphs;
+    const positionedGlyphs = shaping.positionedGlyphs;
 
-    if (maxWidth) {
-        for (var i = 0; i < positionedGlyphs.length; i++) {
-            var positionedGlyph = positionedGlyphs[i];
+    if (writingMode === WritingMode.horizontal && maxWidth) {
+        if (useBalancedIdeographicBreaking) {
+            const lastPositionedGlyph = positionedGlyphs[positionedGlyphs.length - 1];
+            const estimatedLineCount = Math.max(1, Math.ceil(lastPositionedGlyph.x / maxWidth));
+            maxWidth = lastPositionedGlyph.x / estimatedLineCount;
+        }
+
+        for (let i = 0; i < positionedGlyphs.length; i++) {
+            const positionedGlyph = positionedGlyphs[i];
 
             positionedGlyph.x -= lengthBeforeCurrentLine;
             positionedGlyph.y += lineHeight * line;
@@ -99,17 +120,17 @@ function linewrap(shaping, glyphs, lineHeight, maxWidth, horizontalAlign, vertic
             if (lastSafeBreak !== null && (positionedGlyph.x > maxWidth ||
                     positionedGlyphs[lastSafeBreak].codePoint === newLine)) {
 
-                var lineLength = positionedGlyphs[lastSafeBreak + 1].x;
+                const lineLength = positionedGlyphs[lastSafeBreak + 1].x;
                 maxLineLength = Math.max(lineLength, maxLineLength);
 
-                for (var k = lastSafeBreak + 1; k <= i; k++) {
+                for (let k = lastSafeBreak + 1; k <= i; k++) {
                     positionedGlyphs[k].y += lineHeight;
                     positionedGlyphs[k].x -= lineLength;
                 }
 
-                if (justify) {
+                if (justify && lastSafeBreak > lineStartIndex) {
                     // Collapse invisible characters.
-                    var lineEnd = lastSafeBreak;
+                    let lineEnd = lastSafeBreak;
                     if (invisible[positionedGlyphs[lastSafeBreak].codePoint]) {
                         lineEnd--;
                     }
@@ -123,17 +144,17 @@ function linewrap(shaping, glyphs, lineHeight, maxWidth, horizontalAlign, vertic
                 line++;
             }
 
-            if (breakable[positionedGlyph.codePoint]) {
+            if (useBalancedIdeographicBreaking || breakable[positionedGlyph.codePoint] || scriptDetection.charAllowsIdeographicBreaking(positionedGlyph.codePoint)) {
                 lastSafeBreak = i;
             }
         }
     }
 
-    var lastPositionedGlyph = positionedGlyphs[positionedGlyphs.length - 1];
-    var lastLineLength = lastPositionedGlyph.x + glyphs[lastPositionedGlyph.codePoint].advance;
+    const lastPositionedGlyph = positionedGlyphs[positionedGlyphs.length - 1];
+    const lastLineLength = lastPositionedGlyph.x + glyphs[lastPositionedGlyph.codePoint].advance;
     maxLineLength = Math.max(maxLineLength, lastLineLength);
 
-    var height = (line + 1) * lineHeight;
+    const height = (line + 1) * lineHeight;
 
     justifyLine(positionedGlyphs, glyphs, lineStartIndex, positionedGlyphs.length - 1, justify);
     align(positionedGlyphs, justify, horizontalAlign, verticalAlign, maxLineLength, lineHeight, line, translate);
@@ -146,35 +167,34 @@ function linewrap(shaping, glyphs, lineHeight, maxWidth, horizontalAlign, vertic
 }
 
 function justifyLine(positionedGlyphs, glyphs, start, end, justify) {
-    var lastAdvance = glyphs[positionedGlyphs[end].codePoint].advance;
-    var lineIndent = (positionedGlyphs[end].x + lastAdvance) * justify;
+    const lastAdvance = glyphs[positionedGlyphs[end].codePoint].advance;
+    const lineIndent = (positionedGlyphs[end].x + lastAdvance) * justify;
 
-    for (var j = start; j <= end; j++) {
+    for (let j = start; j <= end; j++) {
         positionedGlyphs[j].x -= lineIndent;
     }
 
 }
 
 function align(positionedGlyphs, justify, horizontalAlign, verticalAlign, maxLineLength, lineHeight, line, translate) {
-    var shiftX = (justify - horizontalAlign) * maxLineLength + translate[0];
-    var shiftY = (-verticalAlign * (line + 1) + 0.5) * lineHeight + translate[1];
+    const shiftX = (justify - horizontalAlign) * maxLineLength + translate[0];
+    const shiftY = (-verticalAlign * (line + 1) + 0.5) * lineHeight + translate[1];
 
-    for (var j = 0; j < positionedGlyphs.length; j++) {
+    for (let j = 0; j < positionedGlyphs.length; j++) {
         positionedGlyphs[j].x += shiftX;
         positionedGlyphs[j].y += shiftY;
     }
 }
 
-
 function shapeIcon(image, layout) {
     if (!image || !image.rect) return null;
 
-    var dx = layout['icon-offset'][0];
-    var dy = layout['icon-offset'][1];
-    var x1 = dx - image.width / 2;
-    var x2 = x1 + image.width;
-    var y1 = dy - image.height / 2;
-    var y2 = y1 + image.height;
+    const dx = layout['icon-offset'][0];
+    const dy = layout['icon-offset'][1];
+    const x1 = dx - image.width / 2;
+    const x2 = x1 + image.width;
+    const y1 = dy - image.height / 2;
+    const y2 = y1 + image.height;
 
     return new PositionedIcon(image, y1, y2, x1, x2);
 }

@@ -1,129 +1,131 @@
 'use strict';
 
-var Evented = require('../util/evented');
-var StyleLayer = require('./style_layer');
-var ImageSprite = require('./image_sprite');
-var Light = require('./light');
-var GlyphSource = require('../symbol/glyph_source');
-var SpriteAtlas = require('../symbol/sprite_atlas');
-var LineAtlas = require('../render/line_atlas');
-var util = require('../util/util');
-var ajax = require('../util/ajax');
-var mapbox = require('../util/mapbox');
-var browser = require('../util/browser');
-var Dispatcher = require('../util/dispatcher');
-var AnimationLoop = require('./animation_loop');
-var validateStyle = require('./validate_style');
-var Source = require('../source/source');
-var QueryFeatures = require('../source/query_features');
-var SourceCache = require('../source/source_cache');
-var styleSpec = require('./style_spec');
-var StyleFunction = require('./style_function');
-var getWorkerPool = require('../global_worker_pool');
+const Evented = require('../util/evented');
+const StyleLayer = require('./style_layer');
+const ImageSprite = require('./image_sprite');
+const Light = require('./light');
+const GlyphSource = require('../symbol/glyph_source');
+const SpriteAtlas = require('../symbol/sprite_atlas');
+const LineAtlas = require('../render/line_atlas');
+const util = require('../util/util');
+const ajax = require('../util/ajax');
+const mapbox = require('../util/mapbox');
+const browser = require('../util/browser');
+const Dispatcher = require('../util/dispatcher');
+const AnimationLoop = require('./animation_loop');
+const validateStyle = require('./validate_style');
+const Source = require('../source/source');
+const QueryFeatures = require('../source/query_features');
+const SourceCache = require('../source/source_cache');
+const styleSpec = require('./style_spec');
+const MapboxGLFunction = require('mapbox-gl-function');
+const getWorkerPool = require('../global_worker_pool');
+const deref = require('mapbox-gl-style-spec/lib/deref');
 
-module.exports = Style;
+/**
+ * @private
+ */
+class Style extends Evented {
 
-function Style(stylesheet, map, options) {
-    this.map = map;
-    this.animationLoop = (map && map.animationLoop) || new AnimationLoop();
-    this.dispatcher = new Dispatcher(getWorkerPool(), this);
-    this.spriteAtlas = new SpriteAtlas(1024, 1024);
-    this.lineAtlas = new LineAtlas(256, 512);
+    constructor(stylesheet, map, options) {
+        super();
+        this.map = map;
+        this.animationLoop = (map && map.animationLoop) || new AnimationLoop();
+        this.dispatcher = new Dispatcher(getWorkerPool(), this);
+        this.spriteAtlas = new SpriteAtlas(1024, 1024);
+        this.lineAtlas = new LineAtlas(256, 512);
 
-    this._layers = {};
-    this._order  = [];
-    this._groups = [];
-    this.sourceCaches = {};
-    this.zoomHistory = {};
+        this._layers = {};
+        this._order  = [];
+        this.sourceCaches = {};
+        this.zoomHistory = {};
+        this._loaded = false;
 
-    util.bindAll(['_redoPlacement'], this);
+        util.bindAll(['_redoPlacement'], this);
 
-    this._resetUpdates();
+        this._resetUpdates();
 
-    options = util.extend({
-        validate: typeof stylesheet === 'string' ? !mapbox.isMapboxURL(stylesheet) : true
-    }, options);
+        options = util.extend({
+            validate: typeof stylesheet === 'string' ? !mapbox.isMapboxURL(stylesheet) : true
+        }, options);
 
-    this.setEventedParent(map);
-    this.fire('dataloading', {dataType: 'style'});
+        this.setEventedParent(map);
+        this.fire('dataloading', {dataType: 'style'});
 
-    var stylesheetLoaded = function(err, stylesheet) {
-        if (err) {
-            this.fire('error', {error: err});
-            return;
+        const stylesheetLoaded = (err, stylesheet) => {
+            if (err) {
+                this.fire('error', {error: err});
+                return;
+            }
+
+            if (options.validate && validateStyle.emitErrors(this, validateStyle(stylesheet))) return;
+
+            this._loaded = true;
+            this.stylesheet = stylesheet;
+
+            this.updateClasses();
+
+            for (const id in stylesheet.sources) {
+                this.addSource(id, stylesheet.sources[id], options);
+            }
+
+            if (stylesheet.sprite) {
+                this.sprite = new ImageSprite(stylesheet.sprite);
+                this.sprite.setEventedParent(this);
+            }
+
+            this.glyphSource = new GlyphSource(stylesheet.glyphs);
+            this._resolve();
+            this.fire('data', {dataType: 'style'});
+            this.fire('style.load');
+        };
+
+        if (typeof stylesheet === 'string') {
+            ajax.getJSON(mapbox.normalizeStyleURL(stylesheet), stylesheetLoaded);
+        } else {
+            browser.frame(stylesheetLoaded.bind(this, null, stylesheet));
         }
 
-        if (options.validate && validateStyle.emitErrors(this, validateStyle(stylesheet))) return;
-
-        this._loaded = true;
-        this.stylesheet = stylesheet;
-
-        this.updateClasses();
-
-        for (var id in stylesheet.sources) {
-            this.addSource(id, stylesheet.sources[id], options);
-        }
-
-        if (stylesheet.sprite) {
-            this.sprite = new ImageSprite(stylesheet.sprite);
-            this.sprite.setEventedParent(this);
-        }
-
-        this.glyphSource = new GlyphSource(stylesheet.glyphs);
-        this._resolve();
-        this.fire('data', {dataType: 'style'});
-        this.fire('style.load');
-    }.bind(this);
-
-    if (typeof stylesheet === 'string') {
-        ajax.getJSON(mapbox.normalizeStyleURL(stylesheet), stylesheetLoaded);
-    } else {
-        browser.frame(stylesheetLoaded.bind(this, null, stylesheet));
-    }
-
-    this.on('source.load', function(event) {
-        var source = event.source;
-        if (source && source.vectorLayerIds) {
-            for (var layerId in this._layers) {
-                var layer = this._layers[layerId];
-                if (layer.source === source.id) {
-                    this._validateLayer(layer);
+        this.on('source.load', (event) => {
+            const source = event.source;
+            if (source && source.vectorLayerIds) {
+                for (const layerId in this._layers) {
+                    const layer = this._layers[layerId];
+                    if (layer.source === source.id) {
+                        this._validateLayer(layer);
+                    }
                 }
             }
-        }
-    });
-}
+        });
+    }
 
-Style.prototype = util.inherit(Evented, {
-    _loaded: false,
-
-    _validateLayer: function(layer) {
-        var sourceCache = this.sourceCaches[layer.source];
+    _validateLayer(layer) {
+        const sourceCache = this.sourceCaches[layer.source];
 
         if (!layer.sourceLayer) return;
         if (!sourceCache) return;
-        var source = sourceCache.getSource();
+        const source = sourceCache.getSource();
         if (!source.vectorLayerIds) return;
 
         if (source.vectorLayerIds.indexOf(layer.sourceLayer) === -1) {
             this.fire('error', {
                 error: new Error(
-                    'Source layer "' + layer.sourceLayer + '" ' +
-                    'does not exist on source "' + source.id + '" ' +
-                    'as specified by style layer "' + layer.id + '"'
+                    `Source layer "${layer.sourceLayer}" ` +
+                    `does not exist on source "${source.id}" ` +
+                    `as specified by style layer "${layer.id}"`
                 )
             });
         }
-    },
+    }
 
-    loaded: function() {
+    loaded() {
         if (!this._loaded)
             return false;
 
-        if (Object.keys(this._updates.sources).length)
+        if (Object.keys(this._updatedSources).length)
             return false;
 
-        for (var id in this.sourceCaches)
+        for (const id in this.sourceCaches)
             if (!this.sourceCaches[id].loaded())
                 return false;
 
@@ -131,130 +133,84 @@ Style.prototype = util.inherit(Evented, {
             return false;
 
         return true;
-    },
+    }
 
-    _resolve: function() {
-        var layer, layerJSON;
+    _resolve() {
+        const layers = deref(this.stylesheet.layers);
+
+        this._order = layers.map((layer) => layer.id);
 
         this._layers = {};
-        this._order  = this.stylesheet.layers.map(function(layer) {
-            return layer.id;
-        });
-
-        // resolve all layers WITHOUT a ref
-        for (var i = 0; i < this.stylesheet.layers.length; i++) {
-            layerJSON = this.stylesheet.layers[i];
-            if (layerJSON.ref) continue;
-            layer = StyleLayer.create(layerJSON);
-            this._layers[layer.id] = layer;
+        for (let layer of layers) {
+            layer = StyleLayer.create(layer);
             layer.setEventedParent(this, {layer: {id: layer.id}});
+            this._layers[layer.id] = layer;
         }
 
-        // resolve all layers WITH a ref
-        for (var j = 0; j < this.stylesheet.layers.length; j++) {
-            layerJSON = this.stylesheet.layers[j];
-            if (!layerJSON.ref) continue;
-            var refLayer = this.getLayer(layerJSON.ref);
-            layer = StyleLayer.create(layerJSON, refLayer);
-            this._layers[layer.id] = layer;
-            layer.setEventedParent(this, {layer: {id: layer.id}});
-        }
-
-        this._groupLayers();
-        this._updateWorkerLayers();
+        this.dispatcher.broadcast('setLayers', this._serializeLayers(this._order));
 
         this.light = new Light(this.stylesheet.light);
-    },
+    }
 
-    _groupLayers: function() {
-        var group;
+    _serializeLayers(ids) {
+        return ids.map((id) => this._layers[id].serialize());
+    }
 
-        this._groups = [];
-
-        // Split into groups of consecutive top-level layers with the same source.
-        for (var i = 0; i < this._order.length; ++i) {
-            var layer = this._layers[this._order[i]];
-
-            if (!group || layer.source !== group.source) {
-                group = [];
-                group.source = layer.source;
-                this._groups.push(group);
-            }
-
-            group.push(layer);
-        }
-    },
-
-    _updateWorkerLayers: function(ids) {
-        this.dispatcher.broadcast(ids ? 'update layers' : 'set layers', this._serializeLayers(ids));
-    },
-
-    _serializeLayers: function(ids) {
-        ids = ids || this._order;
-        var serialized = [];
-        var options = {includeRefProperties: true};
-        for (var i = 0; i < ids.length; i++) {
-            serialized.push(this._layers[ids[i]].serialize(options));
-        }
-        return serialized;
-    },
-
-    _applyClasses: function(classes, options) {
+    _applyClasses(classes, options) {
         if (!this._loaded) return;
 
         classes = classes || [];
         options = options || {transition: true};
-        var transition = this.stylesheet.transition || {};
+        const transition = this.stylesheet.transition || {};
 
-        var layers = this._updates.allPaintProps ? this._layers : this._updates.paintProps;
+        const layers = this._updatedAllPaintProps ? this._layers : this._updatedPaintProps;
 
-        for (var id in layers) {
-            var layer = this._layers[id];
-            var props = this._updates.paintProps[id];
+        for (const id in layers) {
+            const layer = this._layers[id];
+            const props = this._updatedPaintProps[id];
 
-            if (this._updates.allPaintProps || props.all) {
-                layer.updatePaintTransitions(classes, options, transition, this.animationLoop);
+            if (this._updatedAllPaintProps || props.all) {
+                layer.updatePaintTransitions(classes, options, transition, this.animationLoop, this.zoomHistory);
             } else {
-                for (var paintName in props) {
-                    this._layers[id].updatePaintTransition(paintName, classes, options, transition, this.animationLoop);
+                for (const paintName in props) {
+                    this._layers[id].updatePaintTransition(paintName, classes, options, transition, this.animationLoop, this.zoomHistory);
                 }
             }
         }
 
         this.light.updateLightTransitions(options, transition, this.animationLoop);
-    },
+    }
 
-    _recalculate: function(z) {
+    _recalculate(z) {
         if (!this._loaded) return;
 
-        for (var sourceId in this.sourceCaches)
+        for (const sourceId in this.sourceCaches)
             this.sourceCaches[sourceId].used = false;
 
         this._updateZoomHistory(z);
 
-        this.rasterFadeDuration = 300;
-        for (var layerId in this._layers) {
-            var layer = this._layers[layerId];
+        for (const layerId of this._order) {
+            const layer = this._layers[layerId];
 
-            layer.recalculate(z, this.zoomHistory);
+            layer.recalculate(z);
             if (!layer.isHidden(z) && layer.source) {
                 this.sourceCaches[layer.source].used = true;
             }
         }
 
-        this.light.recalculate(z, this.zoomHistory);
+        this.light.recalculate(z);
 
-        var maxZoomTransitionDuration = 300;
+        const maxZoomTransitionDuration = 300;
         if (Math.floor(this.z) !== Math.floor(z)) {
             this.animationLoop.set(maxZoomTransitionDuration);
         }
 
         this.z = z;
-    },
+    }
 
-    _updateZoomHistory: function(z) {
+    _updateZoomHistory(z) {
 
-        var zh = this.zoomHistory;
+        const zh = this.zoomHistory;
 
         if (zh.lastIntegerZoom === undefined) {
             // first time
@@ -275,63 +231,60 @@ Style.prototype = util.inherit(Evented, {
         }
 
         zh.lastZoom = z;
-    },
+    }
 
-    _checkLoaded: function () {
+    _checkLoaded () {
         if (!this._loaded) {
             throw new Error('Style is not done loading');
         }
-    },
+    }
 
     /**
      * Apply queued style updates in a batch
-     * @private
      */
-    update: function(classes, options) {
-        if (!this._updates.changed) return this;
+    update(classes, options) {
+        if (!this._changed) return;
 
-        if (this._updates.allLayers) {
-            this._groupLayers();
-            this._updateWorkerLayers();
-        } else {
-            var updatedIds = Object.keys(this._updates.layers);
-            if (updatedIds.length) {
-                this._updateWorkerLayers(updatedIds);
-            }
+        const updatedIds = Object.keys(this._updatedLayers);
+        const removedIds = Object.keys(this._removedLayers);
+
+        if (updatedIds.length || removedIds.length || this._updatedSymbolOrder) {
+            this._updateWorkerLayers(updatedIds, removedIds);
         }
-
-        var updatedSourceIds = Object.keys(this._updates.sources);
-        var i;
-        for (i = 0; i < updatedSourceIds.length; i++) {
-            this._reloadSource(updatedSourceIds[i]);
-        }
-
-        for (i = 0; i < this._updates.events.length; i++) {
-            var args = this._updates.events[i];
-            this.fire(args[0], args[1]);
+        for (const id in this._updatedSources) {
+            this._reloadSource(id);
         }
 
         this._applyClasses(classes, options);
-
-        if (this._updates.changed) {
-            this.fire('data', {dataType: 'style'});
-        }
-
         this._resetUpdates();
 
-        return this;
-    },
+        this.fire('data', {dataType: 'style'});
+    }
 
-    _resetUpdates: function() {
-        this._updates = {
-            events: [],
-            layers: {},
-            sources: {},
-            paintProps: {}
-        };
-    },
+    _updateWorkerLayers(updatedIds, removedIds) {
+        const symbolOrder = this._updatedSymbolOrder ? this._order.filter((id) => this._layers[id].type === 'symbol') : null;
 
-    addSource: function(id, source, options) {
+        this.dispatcher.broadcast('updateLayers', {
+            layers: this._serializeLayers(updatedIds),
+            removedIds: removedIds,
+            symbolOrder: symbolOrder
+        });
+    }
+
+    _resetUpdates() {
+        this._changed = false;
+
+        this._updatedLayers = {};
+        this._removedLayers = {};
+        this._updatedSymbolOrder = false;
+
+        this._updatedSources = {};
+
+        this._updatedPaintProps = {};
+        this._updatedAllPaintProps = false;
+    }
+
+    addSource(id, source, options) {
         this._checkLoaded();
 
         if (this.sourceCaches[id] !== undefined) {
@@ -339,159 +292,156 @@ Style.prototype = util.inherit(Evented, {
         }
 
         if (!source.type) {
-            throw new Error('The type property must be defined, but the only the following properties were given: ' + Object.keys(source) + '.');
+            throw new Error(`The type property must be defined, but the only the following properties were given: ${Object.keys(source)}.`);
         }
 
-        var builtIns = ['vector', 'raster', 'geojson', 'video', 'image'];
-        var shouldValidate = builtIns.indexOf(source.type) >= 0;
-        if (shouldValidate && this._validate(validateStyle.source, 'sources.' + id, source, null, options)) return this;
+        const builtIns = ['vector', 'raster', 'geojson', 'video', 'image'];
+        const shouldValidate = builtIns.indexOf(source.type) >= 0;
+        if (shouldValidate && this._validate(validateStyle.source, `sources.${id}`, source, null, options)) return;
 
-        source = new SourceCache(id, source, this.dispatcher);
-        this.sourceCaches[id] = source;
-        source.style = this;
-        source.setEventedParent(this, {source: source.getSource()});
+        const sourceCache = this.sourceCaches[id] = new SourceCache(id, source, this.dispatcher);
+        sourceCache.style = this;
+        sourceCache.setEventedParent(this, {source: sourceCache.getSource()});
 
-        if (source.onAdd) source.onAdd(this.map);
-        this._updates.changed = true;
-
-        return this;
-    },
+        if (sourceCache.onAdd) sourceCache.onAdd(this.map);
+        this._changed = true;
+    }
 
     /**
      * Remove a source from this stylesheet, given its id.
      * @param {string} id id of the source to remove
-     * @returns {Style} this style
      * @throws {Error} if no source is found with the given ID
-     * @private
      */
-    removeSource: function(id) {
+    removeSource(id) {
         this._checkLoaded();
 
         if (this.sourceCaches[id] === undefined) {
             throw new Error('There is no source with this ID');
         }
-        var sourceCache = this.sourceCaches[id];
+        const sourceCache = this.sourceCaches[id];
         delete this.sourceCaches[id];
-        delete this._updates.sources[id];
+        delete this._updatedSources[id];
         sourceCache.setEventedParent(null);
         sourceCache.clearTiles();
 
         if (sourceCache.onRemove) sourceCache.onRemove(this.map);
-        this._updates.changed = true;
-
-        return this;
-    },
+        this._changed = true;
+    }
 
     /**
      * Get a source by id.
      * @param {string} id id of the desired source
      * @returns {Object} source
-     * @private
      */
-    getSource: function(id) {
+    getSource(id) {
         return this.sourceCaches[id] && this.sourceCaches[id].getSource();
-    },
+    }
 
     /**
      * Add a layer to the map style. The layer will be inserted before the layer with
      * ID `before`, or appended if `before` is omitted.
      * @param {StyleLayer|Object} layer
      * @param {string=} before  ID of an existing layer to insert before
-     * @returns {Style} `this`
-     * @private
      */
-    addLayer: function(layer, before, options) {
+    addLayer(layerObject, before, options) {
         this._checkLoaded();
 
-        if (!(layer instanceof StyleLayer)) {
-            // this layer is not in the style.layers array, so we pass an impossible array index
-            if (this._validate(validateStyle.layer,
-                    'layers.' + layer.id, layer, {arrayIndex: -1}, options)) return this;
+        const id = layerObject.id;
 
-            var refLayer = layer.ref && this.getLayer(layer.ref);
-            layer = StyleLayer.create(layer, refLayer);
-        }
+        // this layer is not in the style.layers array, so we pass an impossible array index
+        if (this._validate(validateStyle.layer,
+                `layers.${id}`, layerObject, {arrayIndex: -1}, options)) return;
+
+        const layer = StyleLayer.create(layerObject);
         this._validateLayer(layer);
 
-        layer.setEventedParent(this, {layer: {id: layer.id}});
+        layer.setEventedParent(this, {layer: {id: id}});
 
-        this._layers[layer.id] = layer;
-        this._order.splice(before ? this._order.indexOf(before) : Infinity, 0, layer.id);
+        const index = before ? this._order.indexOf(before) : this._order.length;
+        this._order.splice(index, 0, id);
 
-        this._updates.allLayers = true;
-        if (layer.source) {
-            this._updates.sources[layer.source] = true;
+        this._layers[id] = layer;
+
+        delete this._removedLayers[id];
+        this._updateLayer(layer);
+
+        if (layer.type === 'symbol') {
+            this._updatedSymbolOrder = true;
         }
 
-        return this.updateClasses(layer.id);
-    },
+        this.updateClasses(id);
+    }
+
+    /**
+     * Add a layer to the map style. The layer will be inserted before the layer with
+     * ID `before`, or appended if `before` is omitted.
+     * @param {StyleLayer|Object} layer
+     * @param {string=} before  ID of an existing layer to insert before
+     */
+    moveLayer(id, before) {
+        this._checkLoaded();
+        this._changed = true;
+
+        const layer = this._layers[id];
+        if (!layer) throw new Error(`Layer not found: ${id}`);
+
+        const index = this._order.indexOf(id);
+        this._order.splice(index, 1);
+
+        const newIndex = before ? this._order.indexOf(before) : this._order.length;
+        this._order.splice(newIndex, 0, id);
+
+        if (layer.type === 'symbol') {
+            this._updatedSymbolOrder = true;
+            if (layer.source) {
+                this._updatedSources[layer.source] = true;
+            }
+        }
+    }
 
     /**
      * Remove a layer from this stylesheet, given its id.
      * @param {string} id id of the layer to remove
-     * @returns {Style} this style
      * @throws {Error} if no layer is found with the given ID
-     * @private
      */
-    removeLayer: function(id) {
+    removeLayer(id) {
         this._checkLoaded();
 
-        var layer = this._layers[id];
-        if (layer === undefined) {
-            throw new Error('There is no layer with this ID');
-        }
-        for (var i in this._layers) {
-            if (this._layers[i].ref === id) {
-                this.removeLayer(i);
-            }
-        }
+        const layer = this._layers[id];
+        if (!layer) throw new Error(`Layer not found: ${id}`);
 
         layer.setEventedParent(null);
 
+        const index = this._order.indexOf(id);
+        this._order.splice(index, 1);
+
+        if (layer.type === 'symbol') {
+            this._updatedSymbolOrder = true;
+        }
+
+        this._changed = true;
+        this._removedLayers[id] = true;
         delete this._layers[id];
-        delete this._updates.layers[id];
-        delete this._updates.paintProps[id];
-        this._order.splice(this._order.indexOf(id), 1);
-
-        this._updates.allLayers = true;
-        this._updates.changed = true;
-
-        return this;
-    },
+        delete this._updatedLayers[id];
+        delete this._updatedPaintProps[id];
+    }
 
     /**
      * Return the style layer object with the given `id`.
      *
      * @param {string} id - id of the desired layer
      * @returns {?Object} a layer, if one with the given `id` exists
-     * @private
      */
-    getLayer: function(id) {
+    getLayer(id) {
         return this._layers[id];
-    },
+    }
 
-    /**
-     * If a layer has a `ref` property that makes it derive some values
-     * from another layer, return that referent layer. Otherwise,
-     * returns the layer itself.
-     * @param {string} id the layer's id
-     * @returns {Layer} the referent layer or the layer itself
-     * @private
-     */
-    getReferentLayer: function(id) {
-        var layer = this.getLayer(id);
-        if (layer.ref) {
-            layer = this.getLayer(layer.ref);
-        }
-        return layer;
-    },
-
-    setLayerZoomRange: function(layerId, minzoom, maxzoom) {
+    setLayerZoomRange(layerId, minzoom, maxzoom) {
         this._checkLoaded();
 
-        var layer = this.getReferentLayer(layerId);
+        const layer = this.getLayer(layerId);
 
-        if (layer.minzoom === minzoom && layer.maxzoom === maxzoom) return this;
+        if (layer.minzoom === minzoom && layer.maxzoom === maxzoom) return;
 
         if (minzoom != null) {
             layer.minzoom = minzoom;
@@ -499,98 +449,92 @@ Style.prototype = util.inherit(Evented, {
         if (maxzoom != null) {
             layer.maxzoom = maxzoom;
         }
-        return this._updateLayer(layer);
-    },
+        this._updateLayer(layer);
+    }
 
-    setFilter: function(layerId, filter) {
+    setFilter(layerId, filter) {
         this._checkLoaded();
 
-        var layer = this.getReferentLayer(layerId);
+        const layer = this.getLayer(layerId);
 
-        if (filter !== null && this._validate(validateStyle.filter, 'layers.' + layer.id + '.filter', filter)) return this;
+        if (filter !== null && this._validate(validateStyle.filter, `layers.${layer.id}.filter`, filter)) return;
 
-        if (util.deepEqual(layer.filter, filter)) return this;
+        if (util.deepEqual(layer.filter, filter)) return;
         layer.filter = util.clone(filter);
 
-        return this._updateLayer(layer);
-    },
+        this._updateLayer(layer);
+    }
 
     /**
      * Get a layer's filter object
      * @param {string} layer the layer to inspect
      * @returns {*} the layer's filter, if any
-     * @private
      */
-    getFilter: function(layer) {
-        return util.clone(this.getReferentLayer(layer).filter);
-    },
+    getFilter(layer) {
+        return util.clone(this.getLayer(layer).filter);
+    }
 
-    setLayoutProperty: function(layerId, name, value) {
+    setLayoutProperty(layerId, name, value) {
         this._checkLoaded();
 
-        var layer = this.getReferentLayer(layerId);
+        const layer = this.getLayer(layerId);
 
-        if (util.deepEqual(layer.getLayoutProperty(name), value)) return this;
+        if (util.deepEqual(layer.getLayoutProperty(name), value)) return;
 
         layer.setLayoutProperty(name, value);
-        return this._updateLayer(layer);
-    },
+        this._updateLayer(layer);
+    }
 
     /**
      * Get a layout property's value from a given layer
      * @param {string} layer the layer to inspect
      * @param {string} name the name of the layout property
      * @returns {*} the property value
-     * @private
      */
-    getLayoutProperty: function(layer, name) {
-        return this.getReferentLayer(layer).getLayoutProperty(name);
-    },
+    getLayoutProperty(layer, name) {
+        return this.getLayer(layer).getLayoutProperty(name);
+    }
 
-    setPaintProperty: function(layerId, name, value, klass) {
+    setPaintProperty(layerId, name, value, klass) {
         this._checkLoaded();
 
-        var layer = this.getLayer(layerId);
+        const layer = this.getLayer(layerId);
 
-        if (util.deepEqual(layer.getPaintProperty(name, klass), value)) return this;
+        if (util.deepEqual(layer.getPaintProperty(name, klass), value)) return;
 
-        var wasFeatureConstant = layer.isPaintValueFeatureConstant(name);
+        const wasFeatureConstant = layer.isPaintValueFeatureConstant(name);
         layer.setPaintProperty(name, value, klass);
 
-        var isFeatureConstant = !(
+        const isFeatureConstant = !(
             value &&
-            StyleFunction.isFunctionDefinition(value) &&
+            MapboxGLFunction.isFunctionDefinition(value) &&
             value.property !== '$zoom' &&
             value.property !== undefined
         );
 
         if (!isFeatureConstant || !wasFeatureConstant) {
-            this._updates.layers[layerId] = true;
-            if (layer.source) {
-                this._updates.sources[layer.source] = true;
-            }
+            this._updateLayer(layer);
         }
 
-        return this.updateClasses(layerId, name);
-    },
+        this.updateClasses(layerId, name);
+    }
 
-    getPaintProperty: function(layer, name, klass) {
+    getPaintProperty(layer, name, klass) {
         return this.getLayer(layer).getPaintProperty(name, klass);
-    },
+    }
 
-    updateClasses: function (layerId, paintName) {
-        this._updates.changed = true;
+    updateClasses(layerId, paintName) {
+        this._changed = true;
         if (!layerId) {
-            this._updates.allPaintProps = true;
+            this._updatedAllPaintProps = true;
         } else {
-            var props = this._updates.paintProps;
+            const props = this._updatedPaintProps;
             if (!props[layerId]) props[layerId] = {};
             props[layerId][paintName || 'all'] = true;
         }
-        return this;
-    },
+    }
 
-    serialize: function() {
+    serialize() {
         return util.filterObject({
             version: this.stylesheet.version,
             name: this.stylesheet.name,
@@ -603,79 +547,74 @@ Style.prototype = util.inherit(Evented, {
             sprite: this.stylesheet.sprite,
             glyphs: this.stylesheet.glyphs,
             transition: this.stylesheet.transition,
-            sources: util.mapObject(this.sourceCaches, function(source) {
-                return source.serialize();
-            }),
-            layers: this._order.map(function(id) {
-                return this._layers[id].serialize();
-            }, this)
-        }, function(value) { return value !== undefined; });
-    },
+            sources: util.mapObject(this.sourceCaches, (source) => source.serialize()),
+            layers: this._order.map((id) => this._layers[id].serialize())
+        }, (value) => { return value !== undefined; });
+    }
 
-    _updateLayer: function (layer) {
-        this._updates.layers[layer.id] = true;
+    _updateLayer(layer) {
+        this._updatedLayers[layer.id] = true;
         if (layer.source) {
-            this._updates.sources[layer.source] = true;
+            this._updatedSources[layer.source] = true;
         }
-        this._updates.changed = true;
-        return this;
-    },
+        this._changed = true;
+    }
 
-    _flattenRenderedFeatures: function(sourceResults) {
-        var features = [];
-        for (var l = this._order.length - 1; l >= 0; l--) {
-            var layerID = this._order[l];
-            for (var s = 0; s < sourceResults.length; s++) {
-                var layerFeatures = sourceResults[s][layerID];
+    _flattenRenderedFeatures(sourceResults) {
+        const features = [];
+        for (let l = this._order.length - 1; l >= 0; l--) {
+            const layerId = this._order[l];
+            for (const sourceResult of sourceResults) {
+                const layerFeatures = sourceResult[layerId];
                 if (layerFeatures) {
-                    for (var f = 0; f < layerFeatures.length; f++) {
-                        features.push(layerFeatures[f]);
+                    for (const feature of layerFeatures) {
+                        features.push(feature);
                     }
                 }
             }
         }
         return features;
-    },
+    }
 
-    queryRenderedFeatures: function(queryGeometry, params, zoom, bearing) {
+    queryRenderedFeatures(queryGeometry, params, zoom, bearing) {
         if (params && params.filter) {
             this._validate(validateStyle.filter, 'queryRenderedFeatures.filter', params.filter);
         }
 
-        var includedSources = {};
+        const includedSources = {};
         if (params && params.layers) {
-            for (var i = 0; i < params.layers.length; i++) {
-                var layer = this._layers[params.layers[i]];
-                if (!(layer instanceof StyleLayer)) {
+            for (const layerId of params.layers) {
+                const layer = this._layers[layerId];
+                if (!layer) {
                     // this layer is not in the style.layers array
-                    return this.fire('error', {error: 'The layer \'' + params.layers[i] +
-                        '\' does not exist in the map\'s style and cannot be queried for features.'});
+                    this.fire('error', {error: `The layer '${layerId
+                        }' does not exist in the map's style and cannot be queried for features.`});
+                    return;
                 }
                 includedSources[layer.source] = true;
             }
         }
 
-        var sourceResults = [];
-        for (var id in this.sourceCaches) {
+        const sourceResults = [];
+        for (const id in this.sourceCaches) {
             if (params.layers && !includedSources[id]) continue;
-            var sourceCache = this.sourceCaches[id];
-            var results = QueryFeatures.rendered(sourceCache, this._layers, queryGeometry, params, zoom, bearing);
+            const results = QueryFeatures.rendered(this.sourceCaches[id], this._layers, queryGeometry, params, zoom, bearing);
             sourceResults.push(results);
         }
         return this._flattenRenderedFeatures(sourceResults);
-    },
+    }
 
-    querySourceFeatures: function(sourceID, params) {
+    querySourceFeatures(sourceID, params) {
         if (params && params.filter) {
             this._validate(validateStyle.filter, 'querySourceFeatures.filter', params.filter);
         }
-        var sourceCache = this.sourceCaches[sourceID];
+        const sourceCache = this.sourceCaches[sourceID];
         return sourceCache ? QueryFeatures.source(sourceCache, params) : [];
-    },
+    }
 
-    addSourceType: function (name, SourceType, callback) {
+    addSourceType(name, SourceType, callback) {
         if (Source.getType(name)) {
-            return callback(new Error('A source type called "' + name + '" already exists.'));
+            return callback(new Error(`A source type called "${name}" already exists.`));
         }
 
         Source.setType(name, SourceType);
@@ -684,36 +623,36 @@ Style.prototype = util.inherit(Evented, {
             return callback(null, null);
         }
 
-        this.dispatcher.broadcast('load worker source', {
+        this.dispatcher.broadcast('loadWorkerSource', {
             name: name,
             url: SourceType.workerSourceURL
         }, callback);
-    },
+    }
 
-    getLight: function() {
+    getLight() {
         return this.light.getLight();
-    },
+    }
 
-    setLight: function(lightOptions, transitionOptions) {
+    setLight(lightOptions, transitionOptions) {
         this._checkLoaded();
 
-        var light = this.light.getLight();
-        var _update = false;
-        for (var key in lightOptions) {
+        const light = this.light.getLight();
+        let _update = false;
+        for (const key in lightOptions) {
             if (!util.deepEqual(lightOptions[key], light[key])) {
                 _update = true;
                 break;
             }
         }
-        if (!_update) return this;
+        if (!_update) return;
 
-        var transition = this.stylesheet.transition || {};
+        const transition = this.stylesheet.transition || {};
 
         this.light.setLight(lightOptions);
-        return this.light.updateLightTransitions(transitionOptions || {transition: true}, transition, this.animationLoop);
-    },
+        this.light.updateLightTransitions(transitionOptions || {transition: true}, transition, this.animationLoop);
+    }
 
-    _validate: function(validate, key, value, props, options) {
+    _validate(validate, key, value, props, options) {
         if (options && options.validate === false) {
             return false;
         }
@@ -723,53 +662,51 @@ Style.prototype = util.inherit(Evented, {
             value: value,
             styleSpec: styleSpec
         }, props)));
-    },
+    }
 
-    _remove: function() {
-        for (var id in this.sourceCaches) {
+    _remove() {
+        for (const id in this.sourceCaches) {
             this.sourceCaches[id].clearTiles();
         }
         this.dispatcher.remove();
-    },
+    }
 
-    _reloadSource: function(id) {
+    _reloadSource(id) {
         this.sourceCaches[id].reload();
-    },
+    }
 
-    _updateSources: function(transform) {
-        for (var id in this.sourceCaches) {
+    _updateSources(transform) {
+        for (const id in this.sourceCaches) {
             this.sourceCaches[id].update(transform);
         }
-    },
+    }
 
-    _redoPlacement: function() {
-        for (var id in this.sourceCaches) {
+    _redoPlacement() {
+        for (const id in this.sourceCaches) {
             if (this.sourceCaches[id].redoPlacement) this.sourceCaches[id].redoPlacement();
         }
-    },
+    }
 
     // Callbacks from web workers
 
-    'get icons': function(mapId, params, callback) {
-        var sprite = this.sprite;
-        var spriteAtlas = this.spriteAtlas;
-        if (sprite.loaded()) {
-            spriteAtlas.setSprite(sprite);
-            spriteAtlas.addIcons(params.icons, callback);
+    getIcons(mapId, params, callback) {
+        const updateSpriteAtlas = () => {
+            this.spriteAtlas.setSprite(this.sprite);
+            this.spriteAtlas.addIcons(params.icons, callback);
+        };
+        if (this.sprite.loaded()) {
+            updateSpriteAtlas();
         } else {
-            sprite.on('data', function() {
-                spriteAtlas.setSprite(sprite);
-                spriteAtlas.addIcons(params.icons, callback);
-            });
+            this.sprite.on('data', updateSpriteAtlas);
         }
-    },
+    }
 
-    'get glyphs': function(mapId, params, callback) {
-        var stacks = params.stacks,
-            remaining = Object.keys(stacks).length,
-            allGlyphs = {};
+    getGlyphs(mapId, params, callback) {
+        const stacks = params.stacks;
+        let remaining = Object.keys(stacks).length;
+        const allGlyphs = {};
 
-        for (var fontName in stacks) {
+        for (const fontName in stacks) {
             this.glyphSource.getSimpleGlyphs(fontName, stacks[fontName], params.uid, done);
         }
 
@@ -783,4 +720,6 @@ Style.prototype = util.inherit(Evented, {
                 callback(null, allGlyphs);
         }
     }
-});
+}
+
+module.exports = Style;

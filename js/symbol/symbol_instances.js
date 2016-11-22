@@ -1,8 +1,7 @@
 'use strict';
 
-var StructArrayType = require('../util/struct_array');
-var util = require('../util/util');
-var Point = require('point-geometry');
+const createStructArrayType = require('../util/struct_array');
+const Point = require('point-geometry');
 
 /*
  *
@@ -13,7 +12,7 @@ var Point = require('point-geometry');
  * @private
  */
 
-var SymbolInstancesArray = module.exports = new StructArrayType({
+const SymbolInstancesArray = createStructArrayType({
     members: [
 
         { type: 'Uint16', name: 'textBoxStartIndex' },
@@ -30,14 +29,15 @@ var SymbolInstancesArray = module.exports = new StructArrayType({
         { type: 'Int16', name: 'anchorPointY' },
 
         // index -- not sure if we need this -@mollymerp
-        { type: 'Int8', name: 'index' }
+        { type: 'Int8', name: 'index' },
+
+        // Bitmask indicating all available writing modes
+        { type: 'Uint8', name: 'writingModes' }
     ]
 });
 
-util.extendAll(SymbolInstancesArray.prototype.StructType.prototype, {
-    get anchorPoint() {
-        return new Point(this.anchorPointX, this.anchorPointY);
-    }
+Object.defineProperty(SymbolInstancesArray.prototype.StructType.prototype, 'anchorPoint', {
+    get() { return new Point(this.anchorPointX, this.anchorPointY); }
 });
 
-
+module.exports = SymbolInstancesArray;

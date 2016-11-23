@@ -2,293 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="efeae476-ee2e-4ade-8db7-a1b62e69f28e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/assets/radar0.gif" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/assets/radar1.gif" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/assets/radar2.gif" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/assets/radar3.gif" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/assets/radar4.gif" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.flowconfig" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/debug/.eslintrc" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/debug/debug.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_posts/examples/3400-01-04-multiple-geometries.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_posts/examples/3400-01-17-animate-images.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_posts/examples/3400-01-27-3d-extrusion-floorplan.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_posts/examples/3400-01-28-zoomto-linestring.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_posts/examples/3400-01-30-3d-buildings.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/assets/data/indoor-3d-map.geojson" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/interfaces/mapbox-gl-js-test.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/interfaces/point-geometry.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/interfaces/unitbezier.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/data/element_array_type.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/data/extent.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/data/pos_array.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/data/program_configuration.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/data/raster_bounds_array.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/data/vertex_array_type.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/style/style_layer/fill_extrusion_style_layer.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/style/style_layer_index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/util/is_char_in_unicode_block.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/util/script_detection.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/util/verticalize_punctuation.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/plugins/src/mapbox-gl-compare/v0.0.3/mapbox-gl-compare.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/plugins/src/mapbox-gl-compare/v0.0.3/mapbox-gl-compare.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/plugins/src/mapbox-gl-compare/v0.1.0/mapbox-gl-compare.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/plugins/src/mapbox-gl-compare/v0.1.0/mapbox-gl-compare.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/plugins/src/mapbox-gl-draw/v0.13.2/mapbox-gl-draw.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/plugins/src/mapbox-gl-draw/v0.13.2/mapbox-gl-draw.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/plugins/src/mapbox-gl-geocoder/v1.3.2/mapbox-gl-geocoder.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/plugins/src/mapbox-gl-geocoder/v1.3.2/mapbox-gl-geocoder.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/expected/text-shaping-newlines-in-middle.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/js/style/style_layer_index.test.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/js/style/style_transition.test.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/js/util/ajax.test.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/remove_types.js" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/docs/_theme/lib/format_markdown.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/docs/_theme/lib/format_parameters.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/docs/_theme/lib/highlight.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/docs/_theme/test/format_markdown.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/docs/_theme/test/format_parameters.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/docs/_theme/test/index.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/js/render/create_uniform_pragmas.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/js/render/painter/use_program.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/js/style/style_function.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/js/style/style_layer/background_style_layer.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/js/style/style_layer/raster_style_layer.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/js/ui/control/control.js" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/js/render/draw_extrusion.js" afterPath="$PROJECT_DIR$/js/render/draw_fill_extrusion.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/js/render/set_pattern.js" afterPath="$PROJECT_DIR$/js/render/pattern.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.editorconfig" afterPath="$PROJECT_DIR$/.editorconfig" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.eslintrc" afterPath="$PROJECT_DIR$/.eslintrc" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CHANGELOG.md" afterPath="$PROJECT_DIR$/CHANGELOG.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CONTRIBUTING.md" afterPath="$PROJECT_DIR$/CONTRIBUTING.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ISSUE_TEMPLATE.md" afterPath="$PROJECT_DIR$/ISSUE_TEMPLATE.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bench/benchmarks.js" afterPath="$PROJECT_DIR$/bench/benchmarks.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bench/benchmarks/buffer.js" afterPath="$PROJECT_DIR$/bench/benchmarks/buffer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bench/benchmarks/fps.js" afterPath="$PROJECT_DIR$/bench/benchmarks/fps.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bench/benchmarks/frame_duration.js" afterPath="$PROJECT_DIR$/bench/benchmarks/frame_duration.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bench/benchmarks/geojson_setdata_large.js" afterPath="$PROJECT_DIR$/bench/benchmarks/geojson_setdata_large.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bench/benchmarks/geojson_setdata_small.js" afterPath="$PROJECT_DIR$/bench/benchmarks/geojson_setdata_small.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bench/benchmarks/map_load.js" afterPath="$PROJECT_DIR$/bench/benchmarks/map_load.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bench/benchmarks/query_box.js" afterPath="$PROJECT_DIR$/bench/benchmarks/query_box.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bench/benchmarks/query_point.js" afterPath="$PROJECT_DIR$/bench/benchmarks/query_point.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bench/benchmarks/style_load.js" afterPath="$PROJECT_DIR$/bench/benchmarks/style_load.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bench/benchmarks_view.js" afterPath="$PROJECT_DIR$/bench/benchmarks_view.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bench/lib/access_token.js" afterPath="$PROJECT_DIR$/bench/lib/access_token.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bench/lib/coordinates.js" afterPath="$PROJECT_DIR$/bench/lib/coordinates.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bench/lib/create_map.js" afterPath="$PROJECT_DIR$/bench/lib/create_map.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bench/lib/measure_framerate.js" afterPath="$PROJECT_DIR$/bench/lib/measure_framerate.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bench/lib/set_data_perf.js" afterPath="$PROJECT_DIR$/bench/lib/set_data_perf.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bench/unit/bench_transform.js" afterPath="$PROJECT_DIR$/bench/unit/bench_transform.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ci/test.sh" afterPath="$PROJECT_DIR$/ci/test.sh" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/debug/2762.html" afterPath="$PROJECT_DIR$/debug/2762.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/debug/chinese.html" afterPath="$PROJECT_DIR$/debug/chinese.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/debug/circles.html" afterPath="$PROJECT_DIR$/debug/circles.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/debug/cluster.html" afterPath="$PROJECT_DIR$/debug/cluster.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/debug/color_spaces.html" afterPath="$PROJECT_DIR$/debug/color_spaces.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/debug/events.html" afterPath="$PROJECT_DIR$/debug/events.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/debug/image.html" afterPath="$PROJECT_DIR$/debug/image.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/debug/index.html" afterPath="$PROJECT_DIR$/debug/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/debug/markers.html" afterPath="$PROJECT_DIR$/debug/markers.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/debug/multiple.html" afterPath="$PROJECT_DIR$/debug/multiple.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/debug/query_features.html" afterPath="$PROJECT_DIR$/debug/query_features.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/debug/video.html" afterPath="$PROJECT_DIR$/debug/video.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/debug/wms.html" afterPath="$PROJECT_DIR$/debug/wms.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/_data/plugins.json" afterPath="$PROJECT_DIR$/docs/_data/plugins.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/_layouts/default.html" afterPath="$PROJECT_DIR$/docs/_layouts/default.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/_posts/examples/.eslintrc" afterPath="$PROJECT_DIR$/docs/_posts/examples/.eslintrc" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/_posts/examples/3400-01-04-geojson-polygon.html" afterPath="$PROJECT_DIR$/docs/_posts/examples/3400-01-04-geojson-polygon.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/_posts/examples/3400-01-04-hover-styles.html" afterPath="$PROJECT_DIR$/docs/_posts/examples/3400-01-04-hover-styles.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/_posts/examples/3400-01-21-mapbox-gl-compare.html" afterPath="$PROJECT_DIR$/docs/_posts/examples/3400-01-21-mapbox-gl-compare.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/_theme/index.js" afterPath="$PROJECT_DIR$/docs/_theme/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/_theme/section.hbs" afterPath="$PROJECT_DIR$/docs/_theme/section.hbs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/documentation.yml" afterPath="$PROJECT_DIR$/documentation.yml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/data/array_group.js" afterPath="$PROJECT_DIR$/js/data/array_group.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/data/bucket.js" afterPath="$PROJECT_DIR$/js/data/bucket.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/data/bucket/circle_bucket.js" afterPath="$PROJECT_DIR$/js/data/bucket/circle_bucket.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/data/bucket/fill_bucket.js" afterPath="$PROJECT_DIR$/js/data/bucket/fill_bucket.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/data/bucket/fill_extrusion_bucket.js" afterPath="$PROJECT_DIR$/js/data/bucket/fill_extrusion_bucket.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/data/bucket/line_bucket.js" afterPath="$PROJECT_DIR$/js/data/bucket/line_bucket.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/data/bucket/symbol_bucket.js" afterPath="$PROJECT_DIR$/js/data/bucket/symbol_bucket.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/data/buffer.js" afterPath="$PROJECT_DIR$/js/data/buffer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/data/buffer_group.js" afterPath="$PROJECT_DIR$/js/data/buffer_group.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/data/feature_index.js" afterPath="$PROJECT_DIR$/js/data/feature_index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/data/load_geometry.js" afterPath="$PROJECT_DIR$/js/data/load_geometry.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/geo/coordinate.js" afterPath="$PROJECT_DIR$/js/geo/coordinate.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/geo/lng_lat.js" afterPath="$PROJECT_DIR$/js/geo/lng_lat.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/geo/lng_lat_bounds.js" afterPath="$PROJECT_DIR$/js/geo/lng_lat_bounds.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/geo/transform.js" afterPath="$PROJECT_DIR$/js/geo/transform.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/global_worker_pool.js" afterPath="$PROJECT_DIR$/js/global_worker_pool.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/lib/debugtext.js" afterPath="$PROJECT_DIR$/js/lib/debugtext.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/mapbox-gl.js" afterPath="$PROJECT_DIR$/js/mapbox-gl.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/render/draw_background.js" afterPath="$PROJECT_DIR$/js/render/draw_background.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/render/draw_circle.js" afterPath="$PROJECT_DIR$/js/render/draw_circle.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/render/draw_collision_debug.js" afterPath="$PROJECT_DIR$/js/render/draw_collision_debug.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/render/draw_debug.js" afterPath="$PROJECT_DIR$/js/render/draw_debug.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/render/draw_fill.js" afterPath="$PROJECT_DIR$/js/render/draw_fill.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/render/draw_line.js" afterPath="$PROJECT_DIR$/js/render/draw_line.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/render/draw_raster.js" afterPath="$PROJECT_DIR$/js/render/draw_raster.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/render/draw_symbol.js" afterPath="$PROJECT_DIR$/js/render/draw_symbol.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/render/frame_history.js" afterPath="$PROJECT_DIR$/js/render/frame_history.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/render/line_atlas.js" afterPath="$PROJECT_DIR$/js/render/line_atlas.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/render/painter.js" afterPath="$PROJECT_DIR$/js/render/painter.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/render/vertex_array_object.js" afterPath="$PROJECT_DIR$/js/render/vertex_array_object.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/source/geojson_source.js" afterPath="$PROJECT_DIR$/js/source/geojson_source.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/source/geojson_worker_source.js" afterPath="$PROJECT_DIR$/js/source/geojson_worker_source.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/source/geojson_wrapper.js" afterPath="$PROJECT_DIR$/js/source/geojson_wrapper.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/source/image_source.js" afterPath="$PROJECT_DIR$/js/source/image_source.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/source/load_tilejson.js" afterPath="$PROJECT_DIR$/js/source/load_tilejson.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/source/pixels_to_tile_units.js" afterPath="$PROJECT_DIR$/js/source/pixels_to_tile_units.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/source/query_features.js" afterPath="$PROJECT_DIR$/js/source/query_features.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/source/raster_tile_source.js" afterPath="$PROJECT_DIR$/js/source/raster_tile_source.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/source/source.js" afterPath="$PROJECT_DIR$/js/source/source.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/source/source_cache.js" afterPath="$PROJECT_DIR$/js/source/source_cache.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/source/tile.js" afterPath="$PROJECT_DIR$/js/source/tile.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/source/tile_coord.js" afterPath="$PROJECT_DIR$/js/source/tile_coord.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/source/vector_tile_source.js" afterPath="$PROJECT_DIR$/js/source/vector_tile_source.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/source/vector_tile_worker_source.js" afterPath="$PROJECT_DIR$/js/source/vector_tile_worker_source.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/source/video_source.js" afterPath="$PROJECT_DIR$/js/source/video_source.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/source/worker.js" afterPath="$PROJECT_DIR$/js/source/worker.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/source/worker_tile.js" afterPath="$PROJECT_DIR$/js/source/worker_tile.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/style/animation_loop.js" afterPath="$PROJECT_DIR$/js/style/animation_loop.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/style/image_sprite.js" afterPath="$PROJECT_DIR$/js/style/image_sprite.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/style/light.js" afterPath="$PROJECT_DIR$/js/style/light.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/style/parse_color.js" afterPath="$PROJECT_DIR$/js/style/parse_color.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/style/style.js" afterPath="$PROJECT_DIR$/js/style/style.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/style/style_declaration.js" afterPath="$PROJECT_DIR$/js/style/style_declaration.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/style/style_layer.js" afterPath="$PROJECT_DIR$/js/style/style_layer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/style/style_layer/circle_style_layer.js" afterPath="$PROJECT_DIR$/js/style/style_layer/circle_style_layer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/style/style_layer/fill_style_layer.js" afterPath="$PROJECT_DIR$/js/style/style_layer/fill_style_layer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/style/style_layer/line_style_layer.js" afterPath="$PROJECT_DIR$/js/style/style_layer/line_style_layer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/style/style_layer/symbol_style_layer.js" afterPath="$PROJECT_DIR$/js/style/style_layer/symbol_style_layer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/style/style_transition.js" afterPath="$PROJECT_DIR$/js/style/style_transition.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/style/validate_style.js" afterPath="$PROJECT_DIR$/js/style/validate_style.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/symbol/anchor.js" afterPath="$PROJECT_DIR$/js/symbol/anchor.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/symbol/check_max_angle.js" afterPath="$PROJECT_DIR$/js/symbol/check_max_angle.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/symbol/clip_line.js" afterPath="$PROJECT_DIR$/js/symbol/clip_line.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/symbol/collision_box.js" afterPath="$PROJECT_DIR$/js/symbol/collision_box.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/symbol/collision_feature.js" afterPath="$PROJECT_DIR$/js/symbol/collision_feature.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/symbol/collision_tile.js" afterPath="$PROJECT_DIR$/js/symbol/collision_tile.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/symbol/get_anchors.js" afterPath="$PROJECT_DIR$/js/symbol/get_anchors.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/symbol/glyph_atlas.js" afterPath="$PROJECT_DIR$/js/symbol/glyph_atlas.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/symbol/glyph_source.js" afterPath="$PROJECT_DIR$/js/symbol/glyph_source.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/symbol/mergelines.js" afterPath="$PROJECT_DIR$/js/symbol/mergelines.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/symbol/quads.js" afterPath="$PROJECT_DIR$/js/symbol/quads.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/symbol/resolve_text.js" afterPath="$PROJECT_DIR$/js/symbol/resolve_text.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/symbol/shaping.js" afterPath="$PROJECT_DIR$/js/symbol/shaping.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/symbol/sprite_atlas.js" afterPath="$PROJECT_DIR$/js/symbol/sprite_atlas.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/symbol/symbol_instances.js" afterPath="$PROJECT_DIR$/js/symbol/symbol_instances.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/symbol/symbol_quads.js" afterPath="$PROJECT_DIR$/js/symbol/symbol_quads.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/ui/bind_handlers.js" afterPath="$PROJECT_DIR$/js/ui/bind_handlers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/ui/camera.js" afterPath="$PROJECT_DIR$/js/ui/camera.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/ui/control/attribution_control.js" afterPath="$PROJECT_DIR$/js/ui/control/attribution_control.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/ui/control/geolocate_control.js" afterPath="$PROJECT_DIR$/js/ui/control/geolocate_control.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/ui/control/navigation_control.js" afterPath="$PROJECT_DIR$/js/ui/control/navigation_control.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/ui/control/scale_control.js" afterPath="$PROJECT_DIR$/js/ui/control/scale_control.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/ui/handler/box_zoom.js" afterPath="$PROJECT_DIR$/js/ui/handler/box_zoom.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/ui/handler/dblclick_zoom.js" afterPath="$PROJECT_DIR$/js/ui/handler/dblclick_zoom.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/ui/handler/drag_pan.js" afterPath="$PROJECT_DIR$/js/ui/handler/drag_pan.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/ui/handler/drag_rotate.js" afterPath="$PROJECT_DIR$/js/ui/handler/drag_rotate.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/ui/handler/keyboard.js" afterPath="$PROJECT_DIR$/js/ui/handler/keyboard.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/ui/handler/scroll_zoom.js" afterPath="$PROJECT_DIR$/js/ui/handler/scroll_zoom.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/ui/handler/touch_zoom_rotate.js" afterPath="$PROJECT_DIR$/js/ui/handler/touch_zoom_rotate.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/ui/hash.js" afterPath="$PROJECT_DIR$/js/ui/hash.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/ui/map.js" afterPath="$PROJECT_DIR$/js/ui/map.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/ui/marker.js" afterPath="$PROJECT_DIR$/js/ui/marker.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/ui/popup.js" afterPath="$PROJECT_DIR$/js/ui/popup.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/util/actor.js" afterPath="$PROJECT_DIR$/js/util/actor.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/util/ajax.js" afterPath="$PROJECT_DIR$/js/util/ajax.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/util/browser.js" afterPath="$PROJECT_DIR$/js/util/browser.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/util/browser/web_worker.js" afterPath="$PROJECT_DIR$/js/util/browser/web_worker.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/util/classify_rings.js" afterPath="$PROJECT_DIR$/js/util/classify_rings.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/util/dictionary_coder.js" afterPath="$PROJECT_DIR$/js/util/dictionary_coder.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/util/dispatcher.js" afterPath="$PROJECT_DIR$/js/util/dispatcher.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/util/dom.js" afterPath="$PROJECT_DIR$/js/util/dom.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/util/evented.js" afterPath="$PROJECT_DIR$/js/util/evented.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/util/find_pole_of_inaccessibility.js" afterPath="$PROJECT_DIR$/js/util/find_pole_of_inaccessibility.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/util/glyphs.js" afterPath="$PROJECT_DIR$/js/util/glyphs.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/util/interpolate.js" afterPath="$PROJECT_DIR$/js/util/interpolate.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/util/intersection_tests.js" afterPath="$PROJECT_DIR$/js/util/intersection_tests.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/util/lru_cache.js" afterPath="$PROJECT_DIR$/js/util/lru_cache.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/util/mapbox.js" afterPath="$PROJECT_DIR$/js/util/mapbox.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/util/struct_array.js" afterPath="$PROJECT_DIR$/js/util/struct_array.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/util/token.js" afterPath="$PROJECT_DIR$/js/util/token.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/util/util.js" afterPath="$PROJECT_DIR$/js/util/util.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/util/vectortile_to_geojson.js" afterPath="$PROJECT_DIR$/js/util/vectortile_to_geojson.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/util/web_worker.js" afterPath="$PROJECT_DIR$/js/util/web_worker.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/util/window.js" afterPath="$PROJECT_DIR$/js/util/window.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/util/worker_pool.js" afterPath="$PROJECT_DIR$/js/util/worker_pool.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/build/dev.test.js" afterPath="$PROJECT_DIR$/test/build/dev.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/build/min.test.js" afterPath="$PROJECT_DIR$/test/build/min.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/expected/text-shaping-default.json" afterPath="$PROJECT_DIR$/test/expected/text-shaping-default.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/expected/text-shaping-linebreak.json" afterPath="$PROJECT_DIR$/test/expected/text-shaping-linebreak.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/expected/text-shaping-newline.json" afterPath="$PROJECT_DIR$/test/expected/text-shaping-newline.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/expected/text-shaping-null.json" afterPath="$PROJECT_DIR$/test/expected/text-shaping-null.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/expected/text-shaping-spacing.json" afterPath="$PROJECT_DIR$/test/expected/text-shaping-spacing.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/data/bucket.test.js" afterPath="$PROJECT_DIR$/test/js/data/bucket.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/data/buffer.test.js" afterPath="$PROJECT_DIR$/test/js/data/buffer.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/data/fill_bucket.test.js" afterPath="$PROJECT_DIR$/test/js/data/fill_bucket.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/data/line_bucket.test.js" afterPath="$PROJECT_DIR$/test/js/data/line_bucket.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/data/load_geometry.test.js" afterPath="$PROJECT_DIR$/test/js/data/load_geometry.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/data/symbol_bucket.test.js" afterPath="$PROJECT_DIR$/test/js/data/symbol_bucket.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/geo/coordinate.test.js" afterPath="$PROJECT_DIR$/test/js/geo/coordinate.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/geo/lng_lat.test.js" afterPath="$PROJECT_DIR$/test/js/geo/lng_lat.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/geo/lng_lat_bounds.test.js" afterPath="$PROJECT_DIR$/test/js/geo/lng_lat_bounds.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/geo/transform.test.js" afterPath="$PROJECT_DIR$/test/js/geo/transform.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/mapbox-gl.js" afterPath="$PROJECT_DIR$/test/js/mapbox-gl.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/source/geojson_source.test.js" afterPath="$PROJECT_DIR$/test/js/source/geojson_source.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/source/geojson_wrapper.test.js" afterPath="$PROJECT_DIR$/test/js/source/geojson_wrapper.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/source/query_features.test.js" afterPath="$PROJECT_DIR$/test/js/source/query_features.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/source/source_cache.test.js" afterPath="$PROJECT_DIR$/test/js/source/source_cache.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/source/tile.test.js" afterPath="$PROJECT_DIR$/test/js/source/tile.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/source/tile_coord.test.js" afterPath="$PROJECT_DIR$/test/js/source/tile_coord.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/source/vector_tile_source.test.js" afterPath="$PROJECT_DIR$/test/js/source/vector_tile_source.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/source/vector_tile_worker_source.test.js" afterPath="$PROJECT_DIR$/test/js/source/vector_tile_worker_source.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/source/worker.test.js" afterPath="$PROJECT_DIR$/test/js/source/worker.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/source/worker_tile.test.js" afterPath="$PROJECT_DIR$/test/js/source/worker_tile.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/style/animation_loop.test.js" afterPath="$PROJECT_DIR$/test/js/style/animation_loop.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/style/light.test.js" afterPath="$PROJECT_DIR$/test/js/style/light.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/style/style.test.js" afterPath="$PROJECT_DIR$/test/js/style/style.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/style/style_declaration.test.js" afterPath="$PROJECT_DIR$/test/js/style/style_declaration.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/style/style_layer.test.js" afterPath="$PROJECT_DIR$/test/js/style/style_layer.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/symbol/anchor.test.js" afterPath="$PROJECT_DIR$/test/js/symbol/anchor.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/symbol/check_max_angle.test.js" afterPath="$PROJECT_DIR$/test/js/symbol/check_max_angle.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/symbol/collision_feature.js" afterPath="$PROJECT_DIR$/test/js/symbol/collision_feature.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/symbol/get_anchors.test.js" afterPath="$PROJECT_DIR$/test/js/symbol/get_anchors.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/symbol/mergelines.test.js" afterPath="$PROJECT_DIR$/test/js/symbol/mergelines.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/symbol/quads.test.js" afterPath="$PROJECT_DIR$/test/js/symbol/quads.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/symbol/resolve_text.test.js" afterPath="$PROJECT_DIR$/test/js/symbol/resolve_text.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/symbol/shaping.test.js" afterPath="$PROJECT_DIR$/test/js/symbol/shaping.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/ui/camera.test.js" afterPath="$PROJECT_DIR$/test/js/ui/camera.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/ui/control/attribution.test.js" afterPath="$PROJECT_DIR$/test/js/ui/control/attribution.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/ui/hash.test.js" afterPath="$PROJECT_DIR$/test/js/ui/hash.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/ui/map.test.js" afterPath="$PROJECT_DIR$/test/js/ui/map.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/ui/marker.test.js" afterPath="$PROJECT_DIR$/test/js/ui/marker.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/ui/popup.test.js" afterPath="$PROJECT_DIR$/test/js/ui/popup.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/util/actor.test.js" afterPath="$PROJECT_DIR$/test/js/util/actor.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/util/browser.test.js" afterPath="$PROJECT_DIR$/test/js/util/browser.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/util/classify_rings.test.js" afterPath="$PROJECT_DIR$/test/js/util/classify_rings.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/util/dispatcher.test.js" afterPath="$PROJECT_DIR$/test/js/util/dispatcher.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/util/evented.test.js" afterPath="$PROJECT_DIR$/test/js/util/evented.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/util/find_pole_of_inaccessibility.test.js" afterPath="$PROJECT_DIR$/test/js/util/find_pole_of_inaccessibility.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/util/interpolate.test.js" afterPath="$PROJECT_DIR$/test/js/util/interpolate.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/util/lru_cache.test.js" afterPath="$PROJECT_DIR$/test/js/util/lru_cache.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/util/mapbox.test.js" afterPath="$PROJECT_DIR$/test/js/util/mapbox.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/util/struct_array.test.js" afterPath="$PROJECT_DIR$/test/js/util/struct_array.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/util/token.test.js" afterPath="$PROJECT_DIR$/test/js/util/token.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/util/util.test.js" afterPath="$PROJECT_DIR$/test/js/util/util.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/js/util/worker_pool.test.js" afterPath="$PROJECT_DIR$/test/js/util/worker_pool.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/node_modules/mapbox-gl-js-test.js" afterPath="$PROJECT_DIR$/test/node_modules/mapbox-gl-js-test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/node_modules/mapbox-gl-js-test/simulate_interaction.js" afterPath="$PROJECT_DIR$/test/node_modules/mapbox-gl-js-test/simulate_interaction.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/plugins/json.test.js" afterPath="$PROJECT_DIR$/test/plugins/json.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/query.test.js" afterPath="$PROJECT_DIR$/test/query.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/render.test.js" afterPath="$PROJECT_DIR$/test/render.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/suite_implementation.js" afterPath="$PROJECT_DIR$/test/suite_implementation.js" />
     </list>
     <ignored path="mapbox-gl-js.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -321,10 +37,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
+      <file leaf-file-name="package.json" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/package.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1234">
+            <state relative-caret-position="-1189">
               <caret line="17" column="31" selection-start-line="17" selection-start-column="31" selection-end-line="17" selection-end-column="31" />
               <folding />
             </state>
@@ -341,11 +57,41 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="vector_tile_source.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="vector_tile_source.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/source/vector_tile_source.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="446">
-              <caret line="82" column="23" selection-start-line="82" selection-start-column="23" selection-end-line="82" selection-end-column="23" />
+            <state relative-caret-position="236">
+              <caret line="93" column="81" selection-start-line="93" selection-start-column="81" selection-end-line="93" selection-end-column="81" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="script_detection.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/js/util/script_detection.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="1" column="25" selection-start-line="1" selection-start-column="24" selection-end-line="1" selection-end-column="25" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mapbox.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/js/util/mapbox.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="643">
+              <caret line="116" column="1" selection-start-line="116" selection-start-column="1" selection-end-line="116" selection-end-column="1" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="image_sprite.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/js/style/image_sprite.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="195">
+              <caret line="27" column="38" selection-start-line="27" selection-start-column="34" selection-end-line="27" selection-end-column="38" />
               <folding />
             </state>
           </provider>
@@ -381,8 +127,9 @@
       <list>
         <option value="$PROJECT_DIR$/js/mapbox-gl.js" />
         <option value="$PROJECT_DIR$/js/source/vector_tile_worker_source.js" />
-        <option value="$PROJECT_DIR$/js/source/vector_tile_source.js" />
         <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/js/util/mapbox.js" />
+        <option value="$PROJECT_DIR$/js/source/vector_tile_source.js" />
       </list>
     </option>
   </component>
@@ -453,6 +200,24 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mapbox-gl-js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mapbox-gl-js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="util" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -566,34 +331,34 @@
       <workItem from="1479124108549" duration="1463000" />
       <workItem from="1479261709511" duration="2932000" />
       <workItem from="1479452762706" duration="487000" />
-      <workItem from="1479788313279" duration="644000" />
+      <workItem from="1479788313279" duration="3881000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="21783000" />
+    <option name="totallyTimeSpent" value="25020000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21564482" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32891566" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32771084" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32771084" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -971,18 +736,42 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
+    <entry file="file://$PROJECT_DIR$/js/util/script_detection.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1234">
-          <caret line="17" column="31" selection-start-line="17" selection-start-column="31" selection-end-line="17" selection-end-column="31" />
+        <state relative-caret-position="15">
+          <caret line="1" column="25" selection-start-line="1" selection-start-column="24" selection-end-line="1" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/style/image_sprite.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="27" column="38" selection-start-line="27" selection-start-column="34" selection-end-line="27" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/util/mapbox.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="643">
+          <caret line="116" column="1" selection-start-line="116" selection-start-column="1" selection-end-line="116" selection-end-column="1" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/source/vector_tile_source.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="446">
-          <caret line="82" column="23" selection-start-line="82" selection-start-column="23" selection-end-line="82" selection-end-column="23" />
+        <state relative-caret-position="236">
+          <caret line="93" column="81" selection-start-line="93" selection-start-column="81" selection-end-line="93" selection-end-column="81" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1189">
+          <caret line="17" column="31" selection-start-line="17" selection-start-column="31" selection-end-line="17" selection-end-column="31" />
           <folding />
         </state>
       </provider>

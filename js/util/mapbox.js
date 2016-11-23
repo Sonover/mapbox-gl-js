@@ -53,6 +53,7 @@ exports.normalizeSourceURL = function(url, accessToken) {
 };
 
 exports.normalizeSpriteURL = function(url, format, extension, accessToken) {
+
     const urlObject = parseUrl(url);
     if (!isMapboxURL(url)) {
         urlObject.path += `${format}${extension}`;
@@ -92,6 +93,14 @@ const urlRe = /^(\w+):\/\/([^/?]+)(\/[^?]+)?\??(.+)?/;
 
 function parseUrl(url) {
     const parts = url.match(urlRe);
+    if(!parts){
+        return {
+            protocol: "",
+            authority: "",
+            path: url,
+            params: []
+        };
+    }
     return {
         protocol: parts[1],
         authority: parts[2],
@@ -102,5 +111,7 @@ function parseUrl(url) {
 
 function formatUrl(obj) {
     const params = obj.params.length ? `?${obj.params.join('&')}` : '';
-    return `${obj.protocol}://${obj.authority}${obj.path}${params}`;
+
+    var with_protocal =  obj.protocol?`${obj.protocol}://${obj.authority}${obj.path}${params}`:`${obj.authority}${obj.path}${params}`;
+    return with_protocal;
 }

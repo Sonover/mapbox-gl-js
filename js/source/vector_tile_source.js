@@ -86,7 +86,7 @@ class VectorTileSource extends Evented {
                 this.db.transaction(function(tx) {
                     tx.executeSql("SELECT tile_data FROM tiles WHERE zoom_level = " + z + " AND tile_column = " + x + " AND tile_row =" + y, [], function (tx, res) {
                         try {
-                            //if(res.rows.item(0)){
+                            if(res.rows.item(0)){
                                 var tileData = res.rows.item(0).tile_data,
                                     tileDataDecoded = window.atob(tileData),
                                     tileDataDecodedLength = tileDataDecoded.length,
@@ -96,10 +96,10 @@ class VectorTileSource extends Evented {
                                 }
                                 var tileDataInflated = Pako.inflate(tileDataTypedArray);
                                 params.tileData = tileDataInflated;
-                                tile.workerID = this.dispatcher.send('load tile', params, done.bind(this));
-                            /*}else{
+                                tile.workerID = this.dispatcher.send('loadTile', params, done.bind(this));
+                            }else{
                                 console.log("No Results",res.rows);
-                            }*/
+                            }
 
                         } catch (error) {
                             console.log("Error after select", error);

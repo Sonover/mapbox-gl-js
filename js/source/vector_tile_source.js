@@ -74,8 +74,12 @@ class VectorTileSource extends Evented {
                 y = url[2];
             y = (1 << z) - 1 - y;
             //this.copyDatabaseFile(params.source + ".mbtiles").then(function() {
-                if (!this.db) {
-                    this.db = window.sqlitePlugin.openDatabase({
+            var dbname = params.source + ".mbtiles";
+            var store_location = 2;
+            var that = this;
+            window.plugins.sqlDB.copy(dbname, store_location, function(){
+                if (!that.db) {
+                    that.db = window.sqlitePlugin.openDatabase({
                         name: params.source + '.mbtiles',
                         location: 2,
                         createFromLocation: 1,
@@ -83,7 +87,7 @@ class VectorTileSource extends Evented {
                     });
                 }
 
-                this.db.transaction(function(tx) {
+                that.db.transaction(function(tx) {
                     tx.executeSql("SELECT tile_data FROM tiles WHERE zoom_level = " + z + " AND tile_column = " + x + " AND tile_row =" + y, [], function (tx, res) {
                         try {
                             if(res.rows.item(0)){
@@ -96,7 +100,7 @@ class VectorTileSource extends Evented {
                                 }
                                 var tileDataInflated = Pako.inflate(tileDataTypedArray);
                                 params.tileData = tileDataInflated;
-                                tile.workerID = this.dispatcher.send('loadTile', params, done.bind(this));
+                                tile.workerID = that.dispatcher.send('loadTile', params, done.bind(that));
                             }else{
                                 console.log("No Results",res.rows);
                             }
@@ -112,6 +116,49 @@ class VectorTileSource extends Evented {
                 }, function() {
                     console.log('transaction ok');
                 });
+            },function(error){
+                if(error.code = 516){
+                    if (!that.db) {
+                        that.db = window.sqlitePlugin.openDatabase({
+                            name: params.source + '.mbtiles',
+                            location: 2,
+                            createFromLocation: 1,
+                            androidDatabaseImplementation: 2
+                        });
+                    }
+
+                    that.db.transaction(function(tx) {
+                        tx.executeSql("SELECT tile_data FROM tiles WHERE zoom_level = " + z + " AND tile_column = " + x + " AND tile_row =" + y, [], function (tx, res) {
+                            try {
+                                if(res.rows.item(0)){
+                                    var tileData = res.rows.item(0).tile_data,
+                                        tileDataDecoded = window.atob(tileData),
+                                        tileDataDecodedLength = tileDataDecoded.length,
+                                        tileDataTypedArray = new Uint8Array(tileDataDecodedLength);
+                                    for (var i = 0; i < tileDataDecodedLength; ++i) {
+                                        tileDataTypedArray[i] = tileDataDecoded.charCodeAt(i);
+                                    }
+                                    var tileDataInflated = Pako.inflate(tileDataTypedArray);
+                                    params.tileData = tileDataInflated;
+                                    tile.workerID = that.dispatcher.send('loadTile', params, done.bind(that));
+                                }else{
+                                    console.log("No Results",res.rows);
+                                }
+
+                            } catch (error) {
+                                console.log("Error after select", error);
+                            }
+                        }.bind(this),function(error, y){
+                            console.log("Error on Getting tiles: ",error,y);
+                        });
+                    }.bind(this), function(error) {
+                        console.log('transaction error: ' + error);
+                    }, function() {
+                        console.log('transaction ok');
+                    });
+                }
+            });
+
             /*}.bind(this)).catch(function(err) {
                 console.log("File Write Error", err);
             });*/

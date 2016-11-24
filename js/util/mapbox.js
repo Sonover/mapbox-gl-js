@@ -54,11 +54,12 @@ exports.normalizeSourceURL = function(url, accessToken) {
 
 exports.normalizeSpriteURL = function(url, format, extension, accessToken) {
 
-    const urlObject = parseUrl(url);
+
     if (!isMapboxURL(url)) {
-        urlObject.path += `${format}${extension}`;
-        return formatUrl(urlObject);
+        //urlObject.path += `${url}${format}${extension}`;
+        return  `${url}${format}${extension}`;
     }
+    const urlObject = parseUrl(url);
     urlObject.path = `/styles/v1${urlObject.path}/sprite${format}${extension}`;
     return makeAPIURL(urlObject, accessToken);
 };
@@ -92,15 +93,8 @@ function replaceTempAccessToken(params) {
 const urlRe = /^(\w+):\/\/([^/?]+)(\/[^?]+)?\??(.+)?/;
 
 function parseUrl(url) {
-    const parts = url.match(urlRe);
-    if(!parts){
-        return {
-            protocol: "",
-            authority: "",
-            path: url,
-            params: []
-        };
-    }
+    var parts = url.match(urlRe);
+    console.log("URL: "+url," ---- Parts: "+parts);
     return {
         protocol: parts[1],
         authority: parts[2],
